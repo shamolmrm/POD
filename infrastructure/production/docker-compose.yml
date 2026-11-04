@@ -16,6 +16,8 @@ services:
     container_name: pod-web
     restart: unless-stopped
     mem_limit: 384m
+    environment:
+      API_INTERNAL_URL: http://pod-api:4000
     networks: [proxy]
 
   pod-api:
