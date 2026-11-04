@@ -1,3 +1,5 @@
+import { SiteFooter, SiteHeader } from "@/components/site-header";
+
 const STEPS = [
   { title: "Pick a product", text: "T-shirts, hoodies, mugs, posters and more." },
   { title: "Design it", text: "Upload images, add text and see a live preview." },
@@ -29,11 +31,9 @@ function Shirt() {
 
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-dvh max-w-5xl flex-col px-4 py-8 sm:px-6">
-      <header className="flex items-center gap-2 font-semibold">
-        <span className="inline-block h-6 w-6 rounded-md bg-gradient-to-br from-accent to-accent-2" />
-        Custom Print Studio
-      </header>
+    <>
+    <SiteHeader />
+    <main className="mx-auto flex max-w-5xl flex-col px-4 py-8 sm:px-6">
 
       <section className="grid flex-1 items-center gap-10 py-12 md:grid-cols-2">
         <div>
@@ -63,7 +63,8 @@ export default function Home() {
         ))}
       </ol>
 
-      <footer className="border-t border-line pt-4 text-xs text-muted">© Custom Print Studio</footer>
     </main>
+    <SiteFooter />
+    </>
   );
 }
