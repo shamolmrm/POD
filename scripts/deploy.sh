@@ -38,6 +38,9 @@ ssh "$SERVER" "
   if ! grep -q '^FILES_SIGNING_KEY=' $REMOTE_DIR/.env; then
     printf 'FILES_SIGNING_KEY=%s\n' \"\$(openssl rand -base64 32)\" >> $REMOTE_DIR/.env
   fi
+  if ! grep -q '^PRINTIFY_WEBHOOK_SECRET=' $REMOTE_DIR/.env; then
+    printf 'PRINTIFY_WEBHOOK_SECRET=%s\n' \"\$(openssl rand -hex 32)\" >> $REMOTE_DIR/.env
+  fi
   echo '==> API typecheck + tests'
   docker build --target test -q -t pod-api-test $REMOTE_DIR/app.new/apps/api >/dev/null
   docker image rm pod-api-test >/dev/null

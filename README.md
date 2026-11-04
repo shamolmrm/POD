@@ -4,7 +4,7 @@ Customers design products (T-shirts, mugs, posters…) in a browser editor, pay,
 fulfilled by Printify.
 
 - **Live:** https://pod.supersoftltd.com (coming-soon page)
-- **Status:** Phase 2 — skeleton & infrastructure done: Next.js web, NestJS API with health/readiness, Prisma + PostgreSQL, Redis, BullMQ worker, Docker deploy with tests, nightly backups. Next: Phase 3 (auth & profiles). Plan: [docs/00-MASTER-PLAN.md](docs/00-MASTER-PLAN.md)
+- **Status:** Phases 1–11 built: accounts, Printify catalog import, storefront with SEO, Fabric.js design editor (print areas, DPI check, uploads, saved designs), cart + coupons + live Printify shipping, SSLCOMMERZ checkout (server-verified), automatic Printify fulfilment + webhooks + tracking, emails, admin (orders, products, coupons, reviews). Waiting for credentials (Printify, SSLCOMMERZ, SMTP) to sell. Plan: [docs/00-MASTER-PLAN.md](docs/00-MASTER-PLAN.md)
 - **Stack:** Next.js + TypeScript + Tailwind (+ shadcn/ui, Fabric.js later) · NestJS + Prisma + PostgreSQL · Redis + BullMQ · Cloudflare R2 · Printify API
 
 ## Layout

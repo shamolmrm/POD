@@ -1,6 +1,7 @@
 /** BullMQ queue names. Jobs are added by the API and processed by the worker. */
 export const QUEUES = {
   system: "system", // heartbeat / maintenance
+  fulfillment: "fulfillment", // paid orders → Printify
 } as const;
 
 export function redisConnection(url: string) {

@@ -11,6 +11,13 @@ import { CatalogService } from "./modules/catalog/catalog.service";
 import { CartController } from "./modules/cart/cart.controller";
 import { CartService } from "./modules/cart/cart.service";
 import { CouponsController } from "./modules/cart/coupons.controller";
+import { MailerService } from "./modules/notifications/mailer.service";
+import { FulfillmentService } from "./modules/orders/fulfillment.service";
+import { AdminOrdersController, OrdersController, ReviewsController } from "./modules/orders/orders.controller";
+import { OrdersService } from "./modules/orders/orders.service";
+import { WebhooksController } from "./modules/orders/webhooks.controller";
+import { PAYMENT_PROVIDER } from "./modules/payments/provider";
+import { SslcommerzProvider } from "./modules/payments/sslcommerz.provider";
 import { DesignsController } from "./modules/designs/designs.controller";
 import { OwnerService } from "./modules/designs/owner";
 import { FilesController } from "./modules/files/files.controller";
@@ -22,7 +29,7 @@ import { PrismaService } from "./prisma.service";
 import { RedisService } from "./redis.service";
 
 @Module({
-  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController, DesignsController, FilesController, CartController, CouponsController],
+  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController, DesignsController, FilesController, CartController, CouponsController, OrdersController, AdminOrdersController, ReviewsController, WebhooksController],
   providers: [
     { provide: CONFIG, useFactory: loadConfig },
     PrismaService,
@@ -37,6 +44,10 @@ import { RedisService } from "./redis.service";
     StorageService,
     OwnerService,
     CartService,
+    MailerService,
+    OrdersService,
+    FulfillmentService,
+    { provide: PAYMENT_PROVIDER, useClass: SslcommerzProvider },
   ],
 })
 export class AppModule implements NestModule {

@@ -1,6 +1,6 @@
 # POD — Master Plan (Phase 1: inspection & architecture)
 
-Status: **Phase 1 approved 2026-11-04; Phase 2 (skeleton + infra) done 2026-11-04.**
+Status: **Phases 1–11 built 2026-11-04** (auth, catalog, editor, cart, payments, Printify fulfilment, admin, reviews). Going live needs owner credentials: Printify token + shop id, SSLCOMMERZ store, SMTP.
 Date: 2026-11-04 · Live slot reserved: `pod.supersoftltd.com` (DNS record pending)
 
 A custom print-on-demand store: customers worldwide pick a product, design it in a browser
@@ -183,10 +183,10 @@ Only `NEXT_PUBLIC_*` values reach the browser, and none of them are secrets.
 | 5 ✅ | Storefront | Category/product pages, variant picker, SEO (metadata, sitemap, JSON-LD), responsive + accessible |
 | 6 ✅ | Design editor v1 | Fabric editor, uploads to R2, text, layers, DPI meter, mockup preview, save designs |
 | 7 ✅ | Cart & shipping | Cart (guest + user), live Printify shipping quote by country, coupons |
-| 8 | Payments | Provider interface + SSLCOMMERZ sandbox, verified IPN, order PAID only after validation |
-| 9 | Fulfilment pipeline | Print-file export, Printify upload/product/order/send_to_production jobs, webhooks, tracking, emails |
-| 10 | Admin dashboard | Orders (retry/flag), products, pricing, coupons, customers, reviews moderation, audit log |
-| 11 | Reviews & polish | Verified reviews, account order history, email templates |
+| 8 ✅ | Payments | Provider interface + SSLCOMMERZ sandbox, verified IPN, order PAID only after validation |
+| 9 ✅ | Fulfilment pipeline | Print-file export, Printify upload/product/order/send_to_production jobs, webhooks, tracking, emails |
+| 10 ✅ | Admin dashboard | Orders (retry/flag), products, pricing, coupons, customers, reviews moderation, audit log |
+| 11 ✅ | Reviews & polish | Verified reviews, account order history, email templates |
 | 12 | AI design (optional module) | Provider interface, off by default, moderation, usage limits |
 | 13 | Go-live hardening | Security review, load test, accessibility audit, live payment keys, legal pages |
 
