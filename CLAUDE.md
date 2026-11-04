@@ -20,4 +20,4 @@ Printify. Master plan: `docs/00-MASTER-PLAN.md`. Read it before any feature work
 
 ## Git
 - Conventional commits (`feat:`, `fix:`, `docs:`, `chore:`).
-- After every completed change: commit, then push (origin = shamolbro/POD, mirror = shamolmrm/POD via `.scriptspush-all.ps1`; deploy with `bash scripts/deploy.sh`).
+- After every completed change: commit, then push (origin = shamolbro/POD, mirror = shamolmrm/POD via `.\scripts\push-all.ps1`; deploy with `bash scripts/deploy.sh`).
