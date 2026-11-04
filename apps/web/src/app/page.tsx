@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
+import { buttonVariants } from "@/components/ui";
 
 const STEPS = [
   { title: "Pick a product", text: "T-shirts, hoodies, mugs, posters and more." },
@@ -47,6 +49,9 @@ export default function Home() {
           <p className="mt-4 max-w-md text-lg text-muted">
             Create your own custom products in an easy online editor. Printed on demand and shipped worldwide.
           </p>
+          <Link href="/products" className={buttonVariants({ variant: "accent", size: "lg", className: "mt-8" })}>
+            Start designing
+          </Link>
         </div>
         <div className="mx-auto aspect-square w-full max-w-sm">
           <Shirt />
