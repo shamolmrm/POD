@@ -8,9 +8,17 @@ export type ProductCard = {
   slug: string;
   title: string;
   image: string | null;
+  image2?: string | null;
   fromCents: number;
   currency: string;
   category: { slug: string; name: string } | null;
+};
+
+export type ReadyDesign = {
+  id: string;
+  name: string;
+  preview: string | null;
+  product: { id: string; slug: string; title: string; image: string | null; currency: string; fromCents: number };
 };
 
 export type ProductDetail = {
@@ -37,7 +45,12 @@ async function get<T>(path: string): Promise<T | null> {
   }
 }
 
-export const getProducts = (category?: string) =>
-  get<ProductCard[]>(`/catalog/products${category ? `?category=${encodeURIComponent(category)}` : ""}`);
+export const getProducts = (category?: string, q?: string) => {
+  const qs = new URLSearchParams();
+  if (category) qs.set("category", category);
+  if (q) qs.set("q", q);
+  return get<ProductCard[]>(`/catalog/products${qs.size ? `?${qs}` : ""}`);
+};
+export const getReadyDesigns = () => get<ReadyDesign[]>("/designs/templates");
 export const getProduct = (slug: string) => get<ProductDetail>(`/catalog/products/${encodeURIComponent(slug)}`);
 export const getCategories = () => get<Array<{ id: string; slug: string; name: string }>>("/catalog/categories");

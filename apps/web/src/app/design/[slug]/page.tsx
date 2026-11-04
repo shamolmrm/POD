@@ -17,7 +17,9 @@ const DesignEditor = dynamic(() => import("@/components/editor/design-editor").t
 
 function EditorPage() {
   const { slug } = useParams<{ slug: string }>();
-  const designId = useSearchParams().get("d") ?? undefined;
+  const params = useSearchParams();
+  const designId = params.get("d") ?? undefined;
+  const templateId = params.get("t") ?? undefined;
   const [product, setProduct] = useState<EditorProduct | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,9 +44,10 @@ function EditorPage() {
       {error && <Alert tone="error">{error}</Alert>}
       {product && (
         <DesignEditor
-          key={designId ?? "new"}
+          key={designId ?? templateId ?? "new"}
           product={product}
           designId={designId && /^[0-9a-f-]{36}$/i.test(designId) ? designId : undefined}
+          templateId={templateId && /^[0-9a-f-]{36}$/i.test(templateId) ? templateId : undefined}
         />
       )}
     </main>

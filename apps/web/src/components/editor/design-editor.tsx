@@ -78,7 +78,7 @@ async function withFreshUrls(json: Record<string, unknown>): Promise<Record<stri
   return { ...json, objects: fresh };
 }
 
-export function DesignEditor({ product, designId }: { product: EditorProduct; designId?: string }) {
+export function DesignEditor({ product, designId, templateId }: { product: EditorProduct; designId?: string; templateId?: string }) {
   const router = useRouter();
   const canvasEl = useRef<HTMLCanvasElement>(null);
   const wrapEl = useRef<HTMLDivElement>(null);
@@ -195,6 +195,19 @@ export function DesignEditor({ product, designId }: { product: EditorProduct; de
     },
     [area, display, pushHistory],
   );
+
+  // start from a ready-made design (saved later as the customer's own copy)
+  useEffect(() => {
+    if (!templateId || designId) return;
+    api<{ name: string; areas: Record<string, AreaState> }>(`/designs/templates/${templateId}`)
+      .then((t) => {
+        areaStates.current = t.areas;
+        setName(t.name);
+        void loadArea(true);
+      })
+      .catch(() => setMsg({ tone: "error", text: "This design is no longer available." }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateId]);
 
   // load an existing design
   useEffect(() => {

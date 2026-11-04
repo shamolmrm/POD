@@ -97,29 +97,55 @@ export class DesignsController {
     return designs.map((d) => ({
       id: d.id,
       name: d.name,
+      isTemplate: d.isTemplate,
       updatedAt: d.updatedAt,
       product: d.product,
       preview: d.versions[0]?.previewKey ? this.storage.signedUrl(d.versions[0].previewKey) : null,
     }));
   }
 
+  /** Ready-made designs sold in the store (made by shop staff, published from "My designs"). */
   @Get("designs/templates")
   async templates(@Query("productId") productId?: string) {
     const designs = await this.prisma.design.findMany({
-      where: { isTemplate: true, ...(productId && /^[0-9a-f-]{36}$/.test(productId) ? { productId } : {}) },
+      where: {
+        isTemplate: true,
+        product: { status: "ACTIVE" },
+        ...(productId && /^[0-9a-f-]{36}$/.test(productId) ? { productId } : {}),
+      },
       take: 60,
       orderBy: { updatedAt: "desc" },
-      include: { versions: { orderBy: { number: "desc" }, take: 1 } },
+      include: {
+        versions: { orderBy: { number: "desc" }, take: 1, select: { previewKey: true } },
+        product: { select: { id: true, slug: true, title: true, currency: true, images: true, variants: { where: { isEnabled: true }, select: { priceCents: true } } } },
+      },
     });
     return designs
-      .filter((d) => d.versions[0])
+      .filter((d) => d.versions[0] && d.product.variants.length)
       .map((d) => ({
         id: d.id,
         name: d.name,
-        productId: d.productId,
-        areas: d.versions[0].areas,
-        preview: d.versions[0].previewKey ? this.storage.signedUrl(d.versions[0].previewKey) : null,
+        preview: d.versions[0].previewKey ? this.storage.signedUrl(d.versions[0].previewKey, 6 * 3600) : null,
+        product: {
+          id: d.product.id,
+          slug: d.product.slug,
+          title: d.product.title,
+          image: (d.product.images as string[])[0] ?? null,
+          currency: d.product.currency,
+          fromCents: Math.min(...d.product.variants.map((v) => v.priceCents)),
+        },
       }));
+  }
+
+  /** The layout of one ready-made design, for opening it in the editor. */
+  @Get("designs/templates/:id")
+  async template(@Param("id", ParseUUIDPipe) id: string) {
+    const d = await this.prisma.design.findFirst({
+      where: { id, isTemplate: true, product: { status: "ACTIVE" } },
+      include: { versions: { orderBy: { number: "desc" }, take: 1 }, product: { select: { slug: true } } },
+    });
+    if (!d?.versions[0]) throw new NotFoundException("Design not found.");
+    return { id: d.id, name: d.name, productSlug: d.product.slug, areas: d.versions[0].areas };
   }
 
   @Get("designs/:id")
@@ -216,7 +242,7 @@ export class DesignsController {
   @Patch("admin/designs/:id/template")
   @UseGuards(AuthGuard)
   @Roles("ADMIN", "STAFF")
-  async template(@Param("id", ParseUUIDPipe) id: string, @Body(zodBody(z.object({ isTemplate: z.boolean() }))) body: { isTemplate: boolean }) {
+  async setTemplate(@Param("id", ParseUUIDPipe) id: string, @Body(zodBody(z.object({ isTemplate: z.boolean() }))) body: { isTemplate: boolean }) {
     return this.prisma.design.update({ where: { id }, data: { isTemplate: body.isTemplate }, select: { id: true, isTemplate: true } });
   }
 

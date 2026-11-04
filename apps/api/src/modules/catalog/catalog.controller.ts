@@ -28,8 +28,8 @@ export class CatalogController {
   ) {}
 
   @Get("products")
-  products(@Query("category") category?: string) {
-    return this.catalog.listActive(category?.slice(0, 80));
+  products(@Query("category") category?: string, @Query("q") q?: string) {
+    return this.catalog.listActive(category?.slice(0, 80), q?.slice(0, 80));
   }
 
   @Get("products/:slug")

@@ -109,9 +109,14 @@ export class CatalogService {
 
   // ── public storefront ──
 
-  async listActive(category?: string) {
+  async listActive(category?: string, q?: string) {
+    const term = q?.trim();
     const products = await this.prisma.product.findMany({
-      where: { status: "ACTIVE", ...(category ? { category: { slug: category } } : {}) },
+      where: {
+        status: "ACTIVE",
+        ...(category ? { category: { slug: category } } : {}),
+        ...(term ? { OR: [{ title: { contains: term, mode: "insensitive" } }, { description: { contains: term, mode: "insensitive" } }] } : {}),
+      },
       orderBy: { createdAt: "desc" },
       include: { variants: { where: { isEnabled: true }, select: { priceCents: true } }, category: { select: { slug: true, name: true } } },
     });
@@ -122,6 +127,7 @@ export class CatalogService {
         slug: p.slug,
         title: p.title,
         image: (p.images as string[])[0] ?? null,
+        image2: (p.images as string[])[1] ?? null,
         fromCents: Math.min(...p.variants.map((v) => v.priceCents)),
         currency: p.currency,
         category: p.category,
