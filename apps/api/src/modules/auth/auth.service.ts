@@ -7,7 +7,7 @@ import { clientIp, TooManyRequests } from "../../common/http";
 import { RateLimitService } from "../../common/rate-limit.service";
 import { CONFIG, type Config } from "../../config";
 import { PrismaService } from "../../prisma.service";
-import { newToken, SESSION_COOKIE, SESSION_DAYS, sha256 } from "./tokens";
+import { GUEST_COOKIE, newToken, SESSION_COOKIE, SESSION_DAYS, sha256 } from "./tokens";
 
 export const MAX_FAILED_LOGINS = 5;
 export const LOCK_SECONDS = 15 * 60;
@@ -117,6 +117,16 @@ export class AuthService {
       },
     });
     res.cookie(SESSION_COOKIE, token, { ...this.cookieOptions(), expires: expiresAt });
+    await this.claimGuestData(user, req);
+  }
+
+  /** Designs and uploads made as a guest on this browser move to the account at sign-in. */
+  private async claimGuestData(user: User, req: Request): Promise<void> {
+    const raw = req.cookies?.[GUEST_COOKIE];
+    if (typeof raw !== "string" || raw.length < 30) return;
+    const guestToken = sha256(raw);
+    await this.prisma.design.updateMany({ where: { guestToken }, data: { ownerId: user.id, guestToken: null } });
+    await this.prisma.asset.updateMany({ where: { guestToken }, data: { ownerId: user.id, guestToken: null } });
   }
 
   private cookieOptions() {

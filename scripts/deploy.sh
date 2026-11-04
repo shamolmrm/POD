@@ -34,6 +34,10 @@ ssh "$SERVER" "
     printf 'POSTGRES_PASSWORD=%s\nREDIS_PASSWORD=%s\n' \"\$(openssl rand -hex 24)\" \"\$(openssl rand -hex 24)\" > $REMOTE_DIR/.env
     echo '    created $REMOTE_DIR/.env with generated secrets'
   fi
+  # file-URL signing key: generated once, never printed
+  if ! grep -q '^FILES_SIGNING_KEY=' $REMOTE_DIR/.env; then
+    printf 'FILES_SIGNING_KEY=%s\n' \"\$(openssl rand -base64 32)\" >> $REMOTE_DIR/.env
+  fi
   echo '==> API typecheck + tests'
   docker build --target test -q -t pod-api-test $REMOTE_DIR/app.new/apps/api >/dev/null
   docker image rm pod-api-test >/dev/null
@@ -46,6 +50,10 @@ ssh "$SERVER" "
   rm -rf $REMOTE_DIR/app.prev
   [ -d $REMOTE_DIR/app ] && mv $REMOTE_DIR/app $REMOTE_DIR/app.prev
   mv $REMOTE_DIR/app.new $REMOTE_DIR/app
+  # persistent files (uploads, print files) owned by the API user (uid 1001), private
+  mkdir -p $REMOTE_DIR/data/files
+  chown -R 1001:1001 $REMOTE_DIR/data
+  chmod 700 $REMOTE_DIR/data
   $COMPOSE build
   $COMPOSE up -d --remove-orphans
   docker image prune -f >/dev/null

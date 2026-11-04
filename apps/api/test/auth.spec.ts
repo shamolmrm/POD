@@ -45,6 +45,8 @@ function fakes() {
       deleteMany: async () => ({ count: 0 }),
       delete: async () => undefined,
     },
+    design: { updateMany: async () => ({ count: 0 }) },
+    asset: { updateMany: async () => ({ count: 0 }) },
   };
   const limits = {
     hit: async (key: string, limit: number) => {

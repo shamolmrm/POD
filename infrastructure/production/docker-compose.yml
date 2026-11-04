@@ -8,6 +8,20 @@ x-api-env: &api-env
   PUBLIC_BASE_URL: https://pod.supersoftltd.com
   DATABASE_URL: postgresql://pod:${POSTGRES_PASSWORD}@pod-postgres:5432/pod
   REDIS_URL: redis://:${REDIS_PASSWORD}@pod-redis:6379/0
+  FILES_DIR: /data/files
+  FILES_SIGNING_KEY: ${FILES_SIGNING_KEY:?set in .env}
+  PRINTIFY_API_TOKEN: ${PRINTIFY_API_TOKEN:-}
+  PRINTIFY_SHOP_ID: ${PRINTIFY_SHOP_ID:-}
+  PRINTIFY_WEBHOOK_SECRET: ${PRINTIFY_WEBHOOK_SECRET:-}
+  PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-}
+  SSLCOMMERZ_STORE_ID: ${SSLCOMMERZ_STORE_ID:-}
+  SSLCOMMERZ_STORE_PASSWORD: ${SSLCOMMERZ_STORE_PASSWORD:-}
+  SSLCOMMERZ_SANDBOX: ${SSLCOMMERZ_SANDBOX:-true}
+  SMTP_HOST: ${SMTP_HOST:-}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+  MAIL_FROM: ${MAIL_FROM:-}
 
 services:
   pod-web:
@@ -29,6 +43,7 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     environment: *api-env
+    volumes: ["../../../data:/data"]
     depends_on:
       pod-postgres: { condition: service_healthy }
       pod-redis: { condition: service_healthy }
@@ -41,6 +56,7 @@ services:
     mem_limit: 384m
     command: ["node", "dist/worker.js"]
     environment: *api-env
+    volumes: ["../../../data:/data"]
     healthcheck:
       disable: true
     depends_on:

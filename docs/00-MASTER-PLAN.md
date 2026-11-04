@@ -179,10 +179,10 @@ Only `NEXT_PUBLIC_*` values reach the browser, and none of them are secrets.
 | 1 | Inspection & architecture | **This document** |
 | 2 ✅ | Skeleton + infra | Monorepo, Next + Nest + Prisma + Redis + BullMQ, health checks, tests in CI build, Docker, deploy to `pod.supersoftltd.com` ("coming soon"), backups |
 | 3 ✅ | Auth & profiles | Register/login/verify/reset, sessions, addresses, roles, admin bootstrap CLI |
-| 4 | Printify connection + catalog | Token check, shop id, blueprint/provider/variant sync into our catalog, placeholders → print areas, markup pricing, webhook registration |
-| 5 | Storefront | Category/product pages, variant picker, SEO (metadata, sitemap, JSON-LD), responsive + accessible |
-| 6 | Design editor v1 | Fabric editor, uploads to R2, text, layers, DPI meter, mockup preview, save designs |
-| 7 | Cart & shipping | Cart (guest + user), live Printify shipping quote by country, coupons |
+| 4 ✅ | Printify connection + catalog | Token check, shop id, blueprint/provider/variant sync into our catalog, placeholders → print areas, markup pricing, webhook registration |
+| 5 ✅ | Storefront | Category/product pages, variant picker, SEO (metadata, sitemap, JSON-LD), responsive + accessible |
+| 6 ✅ | Design editor v1 | Fabric editor, uploads to R2, text, layers, DPI meter, mockup preview, save designs |
+| 7 ✅ | Cart & shipping | Cart (guest + user), live Printify shipping quote by country, coupons |
 | 8 | Payments | Provider interface + SSLCOMMERZ sandbox, verified IPN, order PAID only after validation |
 | 9 | Fulfilment pipeline | Print-file export, Printify upload/product/order/send_to_production jobs, webhooks, tracking, emails |
 | 10 | Admin dashboard | Orders (retry/flag), products, pricing, coupons, customers, reviews moderation, audit log |

@@ -8,6 +8,13 @@ import { AccountController } from "./modules/account/account.controller";
 import { AuthController } from "./modules/auth/auth.controller";
 import { AdminCatalogController, CatalogController } from "./modules/catalog/catalog.controller";
 import { CatalogService } from "./modules/catalog/catalog.service";
+import { CartController } from "./modules/cart/cart.controller";
+import { CartService } from "./modules/cart/cart.service";
+import { CouponsController } from "./modules/cart/coupons.controller";
+import { DesignsController } from "./modules/designs/designs.controller";
+import { OwnerService } from "./modules/designs/owner";
+import { FilesController } from "./modules/files/files.controller";
+import { StorageService } from "./modules/files/storage.service";
 import { PrintifyClient } from "./modules/printify/printify.client";
 import { AuthService } from "./modules/auth/auth.service";
 import { AuthGuard, OptionalAuthGuard } from "./modules/auth/guards";
@@ -15,7 +22,7 @@ import { PrismaService } from "./prisma.service";
 import { RedisService } from "./redis.service";
 
 @Module({
-  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController],
+  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController, DesignsController, FilesController, CartController, CouponsController],
   providers: [
     { provide: CONFIG, useFactory: loadConfig },
     PrismaService,
@@ -27,6 +34,9 @@ import { RedisService } from "./redis.service";
     OptionalAuthGuard,
     PrintifyClient,
     CatalogService,
+    StorageService,
+    OwnerService,
+    CartService,
   ],
 })
 export class AppModule implements NestModule {
