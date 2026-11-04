@@ -134,6 +134,15 @@ export default function AdminProducts() {
   const [status, setStatus] = useState<Status | null>(null);
   const [rows, setRows] = useState<Row[] | null>(null);
   const [tick, setTick] = useState(0);
+  const [demoMsg, setDemoMsg] = useState<string | null>(null);
+  async function demo(path: string) {
+    try {
+      setDemoMsg((await post<{ message: string }>(`/admin/catalog/demo${path}`)).message);
+      setTick((t) => t + 1);
+    } catch (err) {
+      setDemoMsg(errorText(err));
+    }
+  }
   const load = useCallback(() => setTick((t) => t + 1), []);
   useEffect(() => {
     api<Status>("/admin/catalog/printify/status").then(setStatus).catch(() => setStatus(null));
@@ -164,7 +173,18 @@ export default function AdminProducts() {
         )}
         {status?.connected && <Importer onImported={load} />}
         <Card>
-          <h2 className="mb-4 font-semibold">Catalog</h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-semibold">Catalog</h2>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => demo("")}>
+                Add demo catalog
+              </Button>
+              <Button size="sm" variant="ghost" className="text-red-600" onClick={() => window.confirm("Remove all demo products and demo designs?") && demo("/remove")}>
+                Remove all demo
+              </Button>
+            </div>
+          </div>
+          {demoMsg && <Alert>{demoMsg}</Alert>}
           {rows?.length === 0 && <p className="text-sm text-muted">No products yet.</p>}
           <ul className="divide-y divide-line text-sm">
             {rows?.map((r) => (

@@ -24,6 +24,7 @@ export function ProductGrid({ products, mode = "view" }: { products: ProductCard
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.image2} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-0 transition duration-300 group-hover:opacity-100" />
               )}
+              {p.isDemo && <span className="absolute right-3 top-3 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-black">Demo</span>}
               <span className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 translate-y-2 items-center gap-1.5 whitespace-nowrap rounded-full bg-fg px-4 py-2 text-xs font-medium text-bg opacity-0 shadow-lg transition group-hover:translate-y-0 group-hover:opacity-100">
                 <Palette className="h-3.5 w-3.5" /> Customize
               </span>
@@ -59,6 +60,7 @@ export function DesignGrid({ designs }: { designs: ReadyDesign[] }) {
                   <img src={d.product.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                 )
               )}
+              {d.product.isDemo && <span className="absolute right-3 top-3 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-black">Demo</span>}
               <span className="absolute left-3 top-3 rounded-full bg-bg/90 px-2.5 py-1 text-[11px] font-medium shadow-sm">{d.product.title.split(" ").slice(0, 3).join(" ")}</span>
               <span className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 translate-y-2 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-4 py-2 text-xs font-medium text-white opacity-0 shadow-lg transition group-hover:translate-y-0 group-hover:opacity-100">
                 <ShoppingBag className="h-3.5 w-3.5" /> Choose size & buy

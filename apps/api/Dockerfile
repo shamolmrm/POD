@@ -2,7 +2,8 @@
 # POD API + worker (NestJS, Prisma). The same image runs `node dist/main.js` or `node dist/worker.js`.
 
 FROM node:24-alpine AS base
-RUN apk add --no-cache openssl && npm install -g pnpm@12.16.1
+# fonts: server-side text rendering for demo design previews
+RUN apk add --no-cache openssl fontconfig font-dejavu && npm install -g pnpm@12.16.1
 WORKDIR /app
 
 FROM base AS deps

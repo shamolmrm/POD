@@ -128,6 +128,8 @@ model Product {
   images              Json          @default("[]") /// catalog image URLs from Printify
   currency            String        @default("USD") @db.Char(3)
   markupPercent       Int           @default(60) @map("markup_percent")
+  /// demo catalog entry (illustrations, not orderable); removed in one click from the admin
+  isDemo              Boolean       @default(false) @map("is_demo")
   createdAt           DateTime      @default(now()) @map("created_at")
   updatedAt           DateTime      @updatedAt @map("updated_at")
 

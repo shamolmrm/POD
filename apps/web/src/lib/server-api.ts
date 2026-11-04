@@ -9,6 +9,7 @@ export type ProductCard = {
   title: string;
   image: string | null;
   image2?: string | null;
+  isDemo?: boolean;
   fromCents: number;
   currency: string;
   category: { slug: string; name: string } | null;
@@ -18,7 +19,7 @@ export type ReadyDesign = {
   id: string;
   name: string;
   preview: string | null;
-  product: { id: string; slug: string; title: string; image: string | null; currency: string; fromCents: number };
+  product: { id: string; slug: string; title: string; image: string | null; currency: string; fromCents: number; isDemo?: boolean };
 };
 
 export type ProductDetail = {
@@ -26,6 +27,7 @@ export type ProductDetail = {
   slug: string;
   title: string;
   description: string;
+  isDemo?: boolean;
   brand: string | null;
   images: string[];
   currency: string;

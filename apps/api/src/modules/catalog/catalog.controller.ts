@@ -18,6 +18,8 @@ import { zodBody } from "../../common/http";
 import { PrismaService } from "../../prisma.service";
 import { AuthGuard, CurrentUser, Roles } from "../auth/guards";
 import { PrintifyClient } from "../printify/printify.client";
+import { removeDemo, seedDemo } from "../../demo/seed";
+import { StorageService } from "../files/storage.service";
 import { CatalogService, slugify } from "./catalog.service";
 
 @Controller("catalog")
@@ -72,7 +74,22 @@ export class AdminCatalogController {
     private readonly prisma: PrismaService,
     private readonly printify: PrintifyClient,
     private readonly audit: AuditService,
+    private readonly storage: StorageService,
   ) {}
+
+  @Post("demo")
+  async seedDemo(@CurrentUser() user: User) {
+    const message = await seedDemo(this.prisma, this.storage);
+    await this.audit.record("catalog.demo_seed", { actorId: user.id, detail: { message } });
+    return { message };
+  }
+
+  @Post("demo/remove")
+  async removeDemo(@CurrentUser() user: User) {
+    const message = await removeDemo(this.prisma, this.storage);
+    await this.audit.record("catalog.demo_remove", { actorId: user.id, detail: { message } });
+    return { message };
+  }
 
   /** Is Printify connected? Never returns the token. */
   @Get("printify/status")

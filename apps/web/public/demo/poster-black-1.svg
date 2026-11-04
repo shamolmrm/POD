@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="800" height="800">
+<defs><radialGradient id="b" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#fff1ec"/></radialGradient></defs>
+<rect width="400" height="400" fill="url(#b)"/><ellipse cx="200" cy="430" rx="150" ry="22" fill="#000" opacity=".06"/>
+<rect x="105" y="60" width="190" height="270" fill="#fff" stroke="#0d0c12" stroke-width="14"/><rect x="125" y="80" width="150" height="200" fill="#fdf3ee"/><polygon points="200,129.6 212.69616144951743,162.52523292150113 247.93324842127572,164.42554348350265 220.5428207519753,186.67476707849886 229.62437671554065,220.77445651649737 200,201.6 170.37562328445935,220.77445651649737 179.4571792480247,186.67476707849886 152.06675157872425,164.42554348350265 187.30383855048257,162.52523292150113" fill="#ffcc33" stroke="#ff5a36" stroke-width="4.8"/><rect x="140" y="292" width="120" height="8" rx="4" fill="#2a2933" opacity=".6"/>
+</svg>

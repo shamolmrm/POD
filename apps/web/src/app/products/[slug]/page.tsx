@@ -64,6 +64,11 @@ async function Product({ params }: Props) {
           </Link>
         )}
         <h1 className="mt-1 text-3xl font-bold tracking-tight">{p.title}</h1>
+        {p.isDemo && (
+          <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+            Demo product — you can try the editor, but ordering opens soon.
+          </p>
+        )}
         <p className="mt-2 text-xl">From {money(from, p.currency)}</p>
         {avg && (
           <p className="mt-1 text-sm text-muted">

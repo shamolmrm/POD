@@ -51,6 +51,7 @@ export class CartService {
   async add(cartId: string, input: { variantId: string; designVersionId: string; quantity: number }, owner: { userId: string | null; guestToken: string | null }) {
     const variant = await this.prisma.productVariant.findUnique({ where: { id: input.variantId }, include: { product: { include: { printAreas: true } } } });
     if (!variant || !variant.isEnabled || variant.product.status !== "ACTIVE") throw new BadRequestException("This product option is not available.");
+    if (variant.product.isDemo) throw new BadRequestException("This is a demo product and can't be ordered yet. Real products are coming soon!");
     const version = await this.prisma.designVersion.findUnique({ where: { id: input.designVersionId }, include: { design: true } });
     const ownsDesign = version && (owner.userId ? version.design.ownerId === owner.userId : version.design.guestToken === owner.guestToken);
     if (!version || !ownsDesign) throw new NotFoundException("Design not found.");

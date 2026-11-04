@@ -6,6 +6,8 @@
 import { hash } from "@node-rs/argon2";
 import { PrismaClient } from "@prisma/client";
 import { createInterface } from "node:readline";
+import { removeDemo, seedDemo } from "./demo/seed";
+import { StorageService } from "./modules/files/storage.service";
 
 function ask(question: string): Promise<string> {
   const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
@@ -46,9 +48,21 @@ async function createAdmin(email: string, name: string): Promise<void> {
   }
 }
 
+async function demo(action: "seed" | "remove"): Promise<void> {
+  const prisma = new PrismaClient();
+  try {
+    const storage = new StorageService({ env: process.env.NODE_ENV ?? "development", port: 0, databaseUrl: "", redisUrl: "", publicBaseUrl: process.env.PUBLIC_BASE_URL ?? "" });
+    console.log(action === "seed" ? await seedDemo(prisma, storage) : await removeDemo(prisma, storage));
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 async function main(argv: string[]): Promise<void> {
   if (argv[0] === "create-admin" && argv[1]) return createAdmin(argv[1], argv[2] ?? argv[1].split("@")[0]);
-  console.log("Usage: node dist/cli.js create-admin EMAIL [NAME]");
+  if (argv[0] === "seed-demo") return demo("seed");
+  if (argv[0] === "remove-demo") return demo("remove");
+  console.log("Usage: node dist/cli.js create-admin EMAIL [NAME] | seed-demo | remove-demo");
   process.exitCode = 1;
 }
 

@@ -117,7 +117,7 @@ export class DesignsController {
       orderBy: { updatedAt: "desc" },
       include: {
         versions: { orderBy: { number: "desc" }, take: 1, select: { previewKey: true } },
-        product: { select: { id: true, slug: true, title: true, currency: true, images: true, variants: { where: { isEnabled: true }, select: { priceCents: true } } } },
+        product: { select: { id: true, slug: true, title: true, currency: true, images: true, isDemo: true, variants: { where: { isEnabled: true }, select: { priceCents: true } } } },
       },
     });
     return designs
@@ -133,6 +133,7 @@ export class DesignsController {
           image: (d.product.images as string[])[0] ?? null,
           currency: d.product.currency,
           fromCents: Math.min(...d.product.variants.map((v) => v.priceCents)),
+          isDemo: d.product.isDemo,
         },
       }));
   }
