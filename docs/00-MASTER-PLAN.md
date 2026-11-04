@@ -1,6 +1,6 @@
 # POD — Master Plan (Phase 1: inspection & architecture)
 
-Status: **Phases 1–11 built 2026-11-04** (auth, catalog, editor, cart, payments, Printify fulfilment, admin, reviews). Going live needs owner credentials: Printify token + shop id, SSLCOMMERZ store, SMTP.
+Status: **Phases 1–12 built 2026-11-04** (auth, catalog, editor, cart, payments, Printify fulfilment, admin, reviews). Going live needs owner credentials: Printify token + shop id, SSLCOMMERZ store, SMTP.
 Date: 2026-11-04 · Live slot reserved: `pod.supersoftltd.com` (DNS record pending)
 
 A custom print-on-demand store: customers worldwide pick a product, design it in a browser
@@ -150,7 +150,7 @@ R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, R2_PUBLIC_BASE
 PAYMENT_PROVIDER=sslcommerz
 SSLCOMMERZ_STORE_ID, SSLCOMMERZ_STORE_PASSWORD, SSLCOMMERZ_SANDBOX=true
 SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, MAIL_FROM
-AI_PROVIDER (empty = off), AI_API_KEY
+AI_PROVIDER=openai (empty = off), AI_API_KEY, AI_MODEL (default gpt-image-2.5-flare), AI_DAILY_LIMIT (default 200)
 ```
 Only `NEXT_PUBLIC_*` values reach the browser, and none of them are secrets.
 
@@ -187,7 +187,7 @@ Only `NEXT_PUBLIC_*` values reach the browser, and none of them are secrets.
 | 9 ✅ | Fulfilment pipeline | Print-file export, Printify upload/product/order/send_to_production jobs, webhooks, tracking, emails |
 | 10 ✅ | Admin dashboard | Orders (retry/flag), products, pricing, coupons, customers, reviews moderation, audit log |
 | 11 ✅ | Reviews & polish | Verified reviews, account order history, email templates |
-| 12 | AI design (optional module) | Provider interface, off by default, moderation, usage limits |
+| 12 ✅ | AI design (optional module) | Provider interface, off by default, moderation, usage limits |
 | 13 | Go-live hardening | Security review, load test, accessibility audit, live payment keys, legal pages |
 
 ## 10. Decisions needed from the owner

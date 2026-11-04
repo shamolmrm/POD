@@ -1,5 +1,7 @@
 import { type MiddlewareConsumer, Module, type NestModule } from "@nestjs/common";
 import { AuditService } from "./common/audit.service";
+import { AiController } from "./modules/ai/ai.controller";
+import { AiService } from "./modules/ai/ai.service";
 import { OriginMiddleware } from "./common/origin.middleware";
 import { RateLimitService } from "./common/rate-limit.service";
 import { CONFIG, loadConfig } from "./config";
@@ -29,7 +31,7 @@ import { PrismaService } from "./prisma.service";
 import { RedisService } from "./redis.service";
 
 @Module({
-  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController, DesignsController, FilesController, CartController, CouponsController, OrdersController, AdminOrdersController, ReviewsController, WebhooksController],
+  controllers: [HealthController, AuthController, AccountController, CatalogController, AdminCatalogController, DesignsController, FilesController, CartController, CouponsController, OrdersController, AdminOrdersController, ReviewsController, WebhooksController, AiController],
   providers: [
     { provide: CONFIG, useFactory: loadConfig },
     PrismaService,
@@ -47,6 +49,7 @@ import { RedisService } from "./redis.service";
     MailerService,
     OrdersService,
     FulfillmentService,
+    AiService,
     { provide: PAYMENT_PROVIDER, useClass: SslcommerzProvider },
   ],
 })

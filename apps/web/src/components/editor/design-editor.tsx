@@ -14,6 +14,7 @@ import {
   ImagePlus,
   Italic,
   Redo2,
+  Sparkles,
   Trash2,
   Type,
   Undo2,
@@ -103,6 +104,17 @@ export function DesignEditor({ product, designId }: { product: EditorProduct; de
   const [qty, setQty] = useState(1);
   const [display, setDisplay] = useState(480);
   const [preview, setPreview] = useState<string | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    api<{ enabled: boolean }>("/ai/status")
+      .then((s) => alive && setAiEnabled(s.enabled))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // fonts
   useEffect(() => {
@@ -239,26 +251,45 @@ export function DesignEditor({ product, designId }: { product: EditorProduct; de
     pushHistory();
   }
 
-  async function addImage(file: File) {
+  type Asset = { id: string; url: string; widthPx: number; heightPx: number };
+
+  /** Put an uploaded/generated image on the canvas, fitted inside 80% of the print area. */
+  async function placeAsset(asset: Asset) {
     const c = canvasRef.current;
     if (!c || !area) return;
+    const img = await FabricImage.fromURL(asset.url, { crossOrigin: "anonymous" });
+    img.set({ assetId: asset.id } as Partial<FabricImage>);
+    img.scale(Math.min((area.widthPx * 0.8) / asset.widthPx, (area.heightPx * 0.8) / asset.heightPx));
+    center(img);
+    c.add(img);
+    c.setActiveObject(img);
+    pushHistory();
+  }
+
+  async function addImage(file: File) {
     setBusy("upload");
     setMsg(null);
     try {
       const body = new FormData();
       body.append("file", file);
-      const asset = await api<{ id: string; url: string; widthPx: number; heightPx: number }>("/assets", { method: "POST", body });
-      const img = await FabricImage.fromURL(asset.url, { crossOrigin: "anonymous" });
-      img.set({ assetId: asset.id } as Partial<FabricImage>);
-      // fit inside 80% of the area, but never upscale beyond what keeps ~150 DPI
-      const fit = Math.min((area.widthPx * 0.8) / asset.widthPx, (area.heightPx * 0.8) / asset.heightPx);
-      img.scale(fit);
-      center(img);
-      c.add(img);
-      c.setActiveObject(img);
-      pushHistory();
+      await placeAsset(await api<Asset>("/assets", { method: "POST", body }));
     } catch (err) {
       setMsg({ tone: "error", text: errorText(err, "Upload failed.") });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function generateAi(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    setBusy("ai");
+    setMsg({ tone: "info", text: "Creating your artwork… this can take up to a minute." });
+    try {
+      await placeAsset(await api<Asset>("/ai/images", { method: "POST", body: JSON.stringify({ prompt: f.get("prompt"), style: f.get("style") }) }));
+      setMsg({ tone: "success", text: "AI artwork added. AI images are 1024 px — best for small and medium prints." });
+    } catch (err) {
+      setMsg({ tone: "error", text: errorText(err, "Could not create the image.") });
     } finally {
       setBusy(null);
     }
@@ -459,6 +490,25 @@ export function DesignEditor({ product, designId }: { product: EditorProduct; de
           }}
         />
         <p className="text-xs text-muted">PNG with a transparent background looks best. Use high-resolution images (at least 2000 px wide for a full front).</p>
+        {aiEnabled && (
+          <form onSubmit={generateAi} className="mt-2 grid gap-2 rounded-xl border border-line p-3">
+            <Label htmlFor="ai-prompt" className="mb-0 flex items-center gap-1">
+              <Sparkles className="h-4 w-4 text-accent" /> Create with AI
+            </Label>
+            <textarea id="ai-prompt" name="prompt" required minLength={3} maxLength={500} rows={3} placeholder="e.g. a smiling sun wearing sunglasses" className="rounded-lg border border-line bg-bg p-2 text-sm" />
+            <select name="style" defaultValue="illustration" aria-label="Style" className="h-9 rounded-lg border border-line bg-bg px-2 text-sm">
+              {["illustration", "cartoon", "vintage", "lineart", "watercolor", "photo"].map((s) => (
+                <option key={s} value={s}>
+                  {s === "lineart" ? "Line art" : s[0].toUpperCase() + s.slice(1)}
+                </option>
+              ))}
+            </select>
+            <Button type="submit" size="sm" variant="accent" disabled={!!busy}>
+              {busy === "ai" ? "Creating…" : "Generate"}
+            </Button>
+            <p className="text-xs text-muted">Sign-in required. No brands, logos or famous characters.</p>
+          </form>
+        )}
         <div className="mt-4 flex gap-1">
           <Button variant="ghost" size="icon" onClick={() => undoRedo(-1)} disabled={!canUndo} aria-label="Undo">
             <Undo2 className="h-4 w-4" />
