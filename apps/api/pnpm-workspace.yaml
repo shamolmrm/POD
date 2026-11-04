@@ -1,0 +1,7 @@
+allowBuilds:
+  prisma: true
+  "@prisma/client": true
+  "@prisma/engines": true
+  "@nestjs/core": false
+  msgpackr-extract: false
+  "@parcel/watcher": false

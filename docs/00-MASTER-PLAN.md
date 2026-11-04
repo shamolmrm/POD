@@ -1,6 +1,6 @@
 # POD — Master Plan (Phase 1: inspection & architecture)
 
-Status: **Phase 1 — planning, awaiting owner approval.** No application code yet.
+Status: **Phase 1 approved 2026-11-04; Phase 2 (skeleton + infra) done 2026-11-04.**
 Date: 2026-11-04 · Live slot reserved: `pod.supersoftltd.com` (DNS record pending)
 
 A custom print-on-demand store: customers worldwide pick a product, design it in a browser
@@ -177,7 +177,7 @@ Only `NEXT_PUBLIC_*` values reach the browser, and none of them are secrets.
 | # | Phase | Outcome |
 |---|---|---|
 | 1 | Inspection & architecture | **This document** |
-| 2 | Skeleton + infra | Monorepo, Next + Nest + Prisma + Redis + BullMQ, health checks, tests in CI build, Docker, deploy to `pod.supersoftltd.com` ("coming soon"), backups |
+| 2 ✅ | Skeleton + infra | Monorepo, Next + Nest + Prisma + Redis + BullMQ, health checks, tests in CI build, Docker, deploy to `pod.supersoftltd.com` ("coming soon"), backups |
 | 3 | Auth & profiles | Register/login/verify/reset, sessions, addresses, roles, admin bootstrap CLI |
 | 4 | Printify connection + catalog | Token check, shop id, blueprint/provider/variant sync into our catalog, placeholders → print areas, markup pricing, webhook registration |
 | 5 | Storefront | Category/product pages, variant picker, SEO (metadata, sitemap, JSON-LD), responsive + accessible |

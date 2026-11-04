@@ -1,0 +1,19 @@
+// POD database schema. Models are added phase by phase (see docs/00-MASTER-PLAN.md §5).
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Key/value store settings (markup rules, DPI thresholds, shop open/closed …)
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
